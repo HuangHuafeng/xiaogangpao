@@ -100,7 +100,11 @@ export class Manager {
   public onDialogSubmitted(dialog: string) {
     switch (dialog) {
       case "about":
-        this.closeTopDialog("about");
+        this.closeTopDialog(dialog);
+        return;
+
+        case "newmatch":
+        this.closeTopDialog(dialog)
         return;
 
       default:
