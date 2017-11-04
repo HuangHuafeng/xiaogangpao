@@ -1,9 +1,10 @@
 {
   "name": "xgp",
-  "productName": "编排小钢炮",
+  "productName": "小钢炮",
   "version": "1.0.0",
   "author": "Huafeng Huang",
   "license": "MIT",
+  "description": "A program that helps to pairring opponents in Xiangqi match",
   "scripts": {
     "dev": "electron-webpack dev",
     "compile": "electron-webpack",
@@ -16,6 +17,7 @@
     "@types/react-dom": "^16.0.2",
     "babel-preset-react": "^6.24.1",
     "electron": "^1.7.9",
+    "electron-builder": "^19.43.4",
     "electron-webpack": "^1.11.0",
     "electron-webpack-ts": "^1.2.0",
     "node-sass": "^4.5.3",
@@ -34,6 +36,7 @@
     "source-map-support": "^0.5.0"
   },
   "electronWebpack": {
+    "title": true,
     "main": {
       "webpackConfig": "webpack.config.js"
     },
