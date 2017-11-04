@@ -1,13 +1,11 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
-import { Manager } from "./manager";
-import { App } from "./app";
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
+import { Manager } from './manager'
+import { App } from './app'
 
-if (!process.env.TEST_ENV) {
-  /* This is the magic trigger for webpack to go compile
-    * our sass into css and inject it into the DOM. */
-  require("../desktop/styles/desktop.scss");
-}
+// This is the magic trigger for webpack to go compile
+// our sass into css and inject it into the DOM.
+require('../desktop/styles/desktop.scss')
 
-let manager = new Manager();
-ReactDOM.render(<App manager={manager} />, document.getElementById("app"));
+let manager = new Manager()
+ReactDOM.render(<App manager={manager} />, document.getElementById('app'))

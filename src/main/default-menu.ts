@@ -1,11 +1,11 @@
-import * as Electron from "electron";
-import { MenuEvent } from "../menu-event";
+import * as Electron from 'electron'
+import { MenuEvent } from '../menu-event'
 
 type ClickHandler = (
   menuItem: Electron.MenuItem,
   browserWindow: Electron.BrowserWindow,
   event: Electron.Event
-) => void;
+) => void
 
 /**
  * Utility function returning a Click event handler which, when invoked, emits
@@ -14,118 +14,118 @@ type ClickHandler = (
 function emit(name: MenuEvent): ClickHandler {
   return (menuItem, window) => {
     if (window) {
-      window.webContents.send("menu-event", { name });
+      window.webContents.send('menu-event', { name })
     } else {
-      Electron.ipcMain.emit("menu-event", { name });
+      Electron.ipcMain.emit('menu-event', { name })
     }
-  };
+  }
 }
 
 export function buildDefaultMenu(): Electron.Menu {
   let template: Array<Electron.MenuItemConstructorOptions> = [
     {
-      label: "File",
+      label: 'File',
       submenu: [
         {
-          label: "New",
-          accelerator: "CmdOrCtrl+N",
-          click: emit("file-new")
+          label: 'New',
+          accelerator: 'CmdOrCtrl+N',
+          click: emit('file-new'),
         },
         {
-          label: "Open",
-          click: emit("file-open")
+          label: 'Open',
+          click: emit('file-open'),
         },
         {
-          label: "Save",
-          click: emit("file-save")
-        }
-      ]
+          label: 'Save',
+          click: emit('file-save'),
+        },
+      ],
     },
     {
-      role: "editMenu"
+      role: 'editMenu',
     },
     {
-      label: "View",
+      label: 'View',
       submenu: [
         {
-          role: "reload"
+          role: 'reload',
         },
         {
-          role: "forcereload"
+          role: 'forcereload',
         },
         {
-          role: "toggledevtools"
+          role: 'toggledevtools',
         },
         {
-          role: "togglefullscreen"
-        }
-      ]
+          role: 'togglefullscreen',
+        },
+      ],
     },
     {
-      role: "windowMenu"
+      role: 'windowMenu',
     },
     {
-      role: "help",
-      submenu: []
-    }
-  ];
+      role: 'help',
+      submenu: [],
+    },
+  ]
 
-  if (process.platform === "darwin") {
-    const name = Electron.app.getName();
+  if (process.platform === 'darwin') {
+    const name = Electron.app.getName()
     template.unshift({
       label: name,
       submenu: [
         {
           label: `About ${name}`,
-          click: emit("show-about")
+          click: emit('show-about'),
         },
         {
-          type: "separator"
+          type: 'separator',
         },
         {
-          role: "services",
-          submenu: []
+          role: 'services',
+          submenu: [],
         },
         {
-          type: "separator"
+          type: 'separator',
         },
         {
-          role: "hide"
+          role: 'hide',
         },
         {
-          role: "hideothers"
+          role: 'hideothers',
         },
         {
-          role: "unhide"
+          role: 'unhide',
         },
         {
-          type: "separator"
+          type: 'separator',
         },
         {
-          role: "quit"
-        }
-      ]
-    });
+          role: 'quit',
+        },
+      ],
+    })
   }
 
-  if (process.platform === "win32") {
-    const name = Electron.app.getName();
+  if (process.platform === 'win32') {
+    const name = Electron.app.getName()
 
     // add the Exit menu item
     let fileSubmenu = template[0]
-      .submenu as Electron.MenuItemConstructorOptions[];
+      .submenu as Electron.MenuItemConstructorOptions[]
     fileSubmenu.push({
-      role: "quit"
-    });
+      role: 'quit',
+    })
 
     // add the About menu item
     let submenu = template[template.length - 1]
-      .submenu as Electron.MenuItemConstructorOptions[];
+      .submenu as Electron.MenuItemConstructorOptions[]
     submenu.unshift({
       label: `About ${name}`,
-      click: emit("show-about")
-    });
+      click: emit('show-about'),
+    })
   }
 
-  return Electron.Menu.buildFromTemplate(template);
+  return Electron.Menu.buildFromTemplate(template)
 }

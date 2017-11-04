@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react'
 import {
   Button,
   ButtonGroup,
@@ -6,25 +6,27 @@ import {
   DialogContent,
   DialogFooter,
   Row,
-  TextBox
-} from "../desktop";
+  TextBox,
+} from '../desktop'
 
 interface ICreateMatchProps {
-  readonly onDismissed: () => void;
-  readonly applicationName: string;
-  readonly applicationVersion: string;
+  readonly onDismissed: () => void
+  readonly applicationName: string
+  readonly applicationVersion: string
 }
 
-interface ICreateMatchState {
-}
+interface ICreateMatchState {}
 
-export class CreateMatch extends React.Component<ICreateMatchProps, ICreateMatchState> {
+export class CreateMatch extends React.Component<
+  ICreateMatchProps,
+  ICreateMatchState
+> {
   constructor(props: any) {
-    super(props);
+    super(props)
   }
 
   private onValueChanged() {
-    console.log("onValueChanged()");
+    console.log('onValueChanged()')
   }
 
   public render() {
@@ -51,6 +53,6 @@ export class CreateMatch extends React.Component<ICreateMatchProps, ICreateMatch
           </ButtonGroup>
         </DialogFooter>
       </Dialog>
-    );
+    )
   }
 }

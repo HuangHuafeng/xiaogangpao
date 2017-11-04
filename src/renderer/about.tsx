@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react'
 import {
   Button,
   ButtonGroup,
@@ -7,26 +7,25 @@ import {
   DialogFooter,
   Octicon,
   OcticonSymbol,
-  Row
-} from "../desktop";
+  Row,
+} from '../desktop'
 
 interface IAboutProps {
-  readonly onDismissed: () => void;
-  readonly applicationName: string;
-  readonly applicationVersion: string;
+  readonly onDismissed: () => void
+  readonly applicationName: string
+  readonly applicationVersion: string
 }
 
-interface IAboutState {
-}
+interface IAboutState {}
 
 export class About extends React.Component<IAboutProps, IAboutState> {
   constructor(props: any) {
-    super(props);
+    super(props)
   }
 
   public render() {
-    const name = this.props.applicationName;
-    const version = this.props.applicationVersion;
+    const name = this.props.applicationName
+    const version = this.props.applicationVersion
 
     return (
       <Dialog
@@ -47,6 +46,6 @@ export class About extends React.Component<IAboutProps, IAboutState> {
           </ButtonGroup>
         </DialogFooter>
       </Dialog>
-    );
+    )
   }
 }

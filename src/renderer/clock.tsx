@@ -1,25 +1,25 @@
-import * as React from "react";
+import * as React from 'react'
 
 interface IClockState {
-    readonly date: Date;
+  readonly date: Date
 }
 
 export class Clock extends React.Component<any, IClockState> {
-  timerId: NodeJS.Timer;
+  timerId: NodeJS.Timer
 
   constructor(props: any) {
-    super(props);
-    this.state = { date: new Date() };
+    super(props)
+    this.state = { date: new Date() }
 
     // no need to call bind() when using arrow fucntions since 'this' in arrow
     // function is lexical scoped. Check the relevant code in componentDidMount().
-    this.tick = this.tick.bind(this);
+    this.tick = this.tick.bind(this)
   }
 
   tick() {
     this.setState({
-      date: new Date()
-    });
+      date: new Date(),
+    })
   }
 
   componentDidMount() {
@@ -31,14 +31,14 @@ export class Clock extends React.Component<any, IClockState> {
             */
       this.tick,
       1000
-    );
+    )
   }
 
   componentWillUnmount() {
-    clearInterval(this.timerId);
+    clearInterval(this.timerId)
   }
 
   render() {
-    return <h2>{this.state.date.toLocaleTimeString()}</h2>;
+    return <h2>{this.state.date.toLocaleTimeString()}</h2>
   }
 }

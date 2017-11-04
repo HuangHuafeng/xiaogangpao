@@ -7,36 +7,36 @@
  *  * anything else
  */
 
-import * as Electron from "electron";
-import { App } from "./app";
-import { MenuEvent } from "../menu-event";
-import { assertNever } from '../desktop';
+import * as Electron from 'electron'
+import { App } from './app'
+import { MenuEvent } from '../menu-event'
+import { assertNever } from '../desktop'
 
 const notImplemented = (name: string) => {
   const options = {
-    type: "info",
-    title: "Sorry",
-    buttons: ["Ok"],
-    message: `"${name}" is not implemented yet. It will come.`
-  };
+    type: 'info',
+    title: 'Sorry',
+    buttons: ['Ok'],
+    message: `"${name}" is not implemented yet. It will come.`,
+  }
   Electron.remote.dialog.showMessageBox(
     Electron.remote.getCurrentWindow(),
     options
-  );
-};
+  )
+}
 
 export class Manager {
-  openDialogs: string[];
-  app?: App;
+  openDialogs: string[]
+  app?: App
 
   constructor() {
-    this.openDialogs = [];
+    this.openDialogs = []
   }
 
   public getAppState() {
     return {
-      openDialogs: this.openDialogs
-    };
+      openDialogs: this.openDialogs,
+    }
   }
 
   /**
@@ -45,7 +45,7 @@ export class Manager {
    */
   public registerApp(app: App) {
     if (this.app === undefined) {
-      this.app = app;
+      this.app = app
     }
   }
 
@@ -55,28 +55,28 @@ export class Manager {
    */
   public onMenuEvent(event: MenuEvent) {
     switch (event) {
-      case "show-about":
-        if (!this.isDialogAlreadyOpen("about")) {
-          this.openDialogs.push("about");
-          this.updateAppState();
+      case 'show-about':
+        if (!this.isDialogAlreadyOpen('about')) {
+          this.openDialogs.push('about')
+          this.updateAppState()
         }
-        return;
+        return
 
-        case "file-new":
-        if (!this.isDialogAlreadyOpen("newmatch")) {
-          this.openDialogs.push("newmatch");
-          this.updateAppState();
+      case 'file-new':
+        if (!this.isDialogAlreadyOpen('newmatch')) {
+          this.openDialogs.push('newmatch')
+          this.updateAppState()
         }
-        return ;
+        return
 
       default:
-        return notImplemented(event);
+        return notImplemented(event)
     }
   }
 
   private updateAppState() {
     if (this.app !== undefined) {
-      this.app.setState(this.getAppState());
+      this.app.setState(this.getAppState())
     }
   }
 
@@ -88,9 +88,9 @@ export class Manager {
   private isDialogAlreadyOpen(dialog: string) {
     return (
       this.openDialogs.findIndex(value => {
-        return value === dialog;
+        return value === dialog
       }) !== -1
-    );
+    )
   }
 
   /**
@@ -99,26 +99,35 @@ export class Manager {
    */
   public onDialogSubmitted(dialog: string) {
     switch (dialog) {
-      case "about":
-        this.closeTopDialog(dialog);
-        return;
-
-        case "newmatch":
+      case 'about':
         this.closeTopDialog(dialog)
-        return;
+        return
+
+      case 'newmatch':
+        this.closeTopDialog(dialog)
+        return
 
       default:
-        return notImplemented("submitting " + dialog);
+        return notImplemented('submitting ' + dialog)
     }
   }
 
+  /**
+   *
+   * @param dialog must be equal to the top/last dialog
+   */
   private closeTopDialog(dialog?: string) {
     if (dialog) {
       if (dialog !== this.openDialogs[this.openDialogs.length - 1]) {
-        assertNever(dialog as never, `"${dialog}" is NOT same as last one: "${this.openDialogs[this.openDialogs.length - 1]}"`);
+        assertNever(
+          dialog as never,
+          `"${dialog}" is NOT same as last one: "${this.openDialogs[
+            this.openDialogs.length - 1
+          ]}"`
+        )
       }
     }
-    this.openDialogs.pop();
-    this.updateAppState();
+    this.openDialogs.pop()
+    this.updateAppState()
   }
 }
