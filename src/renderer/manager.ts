@@ -7,31 +7,16 @@
  *  * anything else
  */
 
-import * as Electron from 'electron'
 import { App } from './app'
-import { MenuEvent } from '../menu-event'
 import { assertNever } from '../desktop'
 
 export enum PopupType {
-  Ablout = 1,
+  About = 1,
   NewMatch,
 }
 
-const notImplemented = (name: string) => {
-  const options = {
-    type: 'info',
-    title: 'Sorry',
-    buttons: ['Ok'],
-    message: `"${name}" is not implemented yet. It will come.`,
-  }
-  Electron.remote.dialog.showMessageBox(
-    Electron.remote.getCurrentWindow(),
-    options
-  )
-}
-
 export class Manager {
-  openDialogs: string[]
+  openDialogs: PopupType[]
   app?: App
 
   constructor() {
@@ -55,42 +40,11 @@ export class Manager {
   }
 
   /**
-   * Handles menu events
-   * @param event menu event
-   */
-  public onMenuEvent(event: MenuEvent) {
-    switch (event) {
-      case 'show-about':
-        if (!this.isDialogAlreadyOpen('about')) {
-          this.openDialogs.push('about')
-          this.updateAppState()
-        }
-        return
-
-      case 'file-new':
-        if (!this.isDialogAlreadyOpen('newmatch')) {
-          this.openDialogs.push('newmatch')
-          this.updateAppState()
-        }
-        return
-
-      default:
-        return notImplemented(event)
-    }
-  }
-
-  private updateAppState() {
-    if (this.app !== undefined) {
-      this.app.setState(this.getAppState())
-    }
-  }
-
-  /**
    * check if the "dialog" dialog is already open. We don't want to open the same dialog
    * because it can cause issues (like duplicated key, id of the dialog element).
    * @param dialog the dialog to be checked
    */
-  private isDialogAlreadyOpen(dialog: string) {
+  private isDialogAlreadyOpen(dialog: PopupType) {
     return (
       this.openDialogs.findIndex(value => {
         return value === dialog
@@ -102,18 +56,31 @@ export class Manager {
    * Just dismiss (only) the top dialog, do nothing else
    * @param dialog the dialog justed submitted
    */
-  public onPopupDismissed(dialog: string) {
+  public onPopupDismissed(dialog: PopupType) {
     switch (dialog) {
-      case 'about':
+      case PopupType.About:
         this.closeTopDialog(dialog)
         return
 
-      case 'newmatch':
+      case PopupType.NewMatch:
         this.closeTopDialog(dialog)
         return
 
       default:
-        return notImplemented('submitting ' + dialog)
+        assertNever(dialog as never, `Unknown value: "${dialog}"`)
+    }
+  }
+
+  public showPopup(dialog: PopupType) {
+    if (!this.isDialogAlreadyOpen(dialog)) {
+      this.openDialogs.push(dialog)
+      this.onPopupChanged(dialog)
+    }
+  }
+
+  private onPopupChanged(dialog?: PopupType) {
+    if (this.app !== undefined) {
+      this.app.setState({ openDialogs: this.openDialogs })
     }
   }
 
@@ -121,7 +88,7 @@ export class Manager {
    *
    * @param dialog must be equal to the top/last dialog
    */
-  private closeTopDialog(dialog?: string) {
+  private closeTopDialog(dialog?: PopupType) {
     if (dialog) {
       if (dialog !== this.openDialogs[this.openDialogs.length - 1]) {
         assertNever(
@@ -133,6 +100,6 @@ export class Manager {
       }
     }
     this.openDialogs.pop()
-    this.updateAppState()
+    this.onPopupChanged(dialog)
   }
 }
