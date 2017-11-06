@@ -13,7 +13,9 @@ interface ICreateMatchProps {
   readonly onDismissed: () => void
 }
 
-interface ICreateMatchState {}
+interface ICreateMatchState {
+  readonly matchName: string
+}
 
 export class CreateMatch extends React.Component<
   ICreateMatchProps,
@@ -21,20 +23,32 @@ export class CreateMatch extends React.Component<
 > {
   constructor(props: any) {
     super(props)
+
+    this.state = {
+      matchName: '',
+    }
   }
 
-  private onValueChanged(value: string) {
+  private onOK = () => {
+    console.log('You clicked OK')
+    this.props.onDismissed()
+  }
+
+  private onValueChanged = (value: string) => {
     console.log(`onValueChanged(${value})`)
+    this.setState({ matchName: value })
   }
 
   public render() {
+    const disabled = this.state.matchName.length === 0
+
     return (
       <Dialog
         id="newmatch"
         title="新建比赛"
         dismissable={false}
-        onSubmit={this.props.onDismissed}
         onDismissed={this.props.onDismissed}
+        onSubmit={this.onOK}
       >
         <DialogContent>
           <Row>
@@ -47,8 +61,10 @@ export class CreateMatch extends React.Component<
         </DialogContent>
         <DialogFooter>
           <ButtonGroup>
-            <Button onClick={this.props.onDismissed}>确定</Button>
-            <Button onClick={this.props.onDismissed}>Cancel</Button>
+            <Button type="submit" disabled={disabled}>
+              确定
+            </Button>
+            <Button onClick={this.props.onDismissed}>取消</Button>
           </ButtonGroup>
         </DialogFooter>
       </Dialog>
