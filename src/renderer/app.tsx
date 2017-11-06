@@ -33,7 +33,7 @@ export class App extends React.Component<IAppProps, IAppState> {
   }
 
   private onPopupDismissed(dialog: string) {
-    this.props.manager.onDialogSubmitted(dialog)
+    this.props.manager.onPopupDismissed(dialog)
   }
 
   private renderADialog(name: string) {
@@ -56,8 +56,6 @@ export class App extends React.Component<IAppProps, IAppState> {
         onDismissed={() => {
           this.onPopupDismissed('newmatch')
         }}
-        applicationName={Electron.remote.app.getName()}
-        applicationVersion={Electron.remote.app.getVersion()}
       />
     )
   }

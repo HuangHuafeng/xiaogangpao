@@ -11,8 +11,6 @@ import {
 
 interface ICreateMatchProps {
   readonly onDismissed: () => void
-  readonly applicationName: string
-  readonly applicationVersion: string
 }
 
 interface ICreateMatchState {}
@@ -25,8 +23,8 @@ export class CreateMatch extends React.Component<
     super(props)
   }
 
-  private onValueChanged() {
-    console.log('onValueChanged()')
+  private onValueChanged(value: string) {
+    console.log(`onValueChanged(${value})`)
   }
 
   public render() {
@@ -34,6 +32,7 @@ export class CreateMatch extends React.Component<
       <Dialog
         id="newmatch"
         title="新建比赛"
+        dismissable={false}
         onSubmit={this.props.onDismissed}
         onDismissed={this.props.onDismissed}
       >
@@ -41,7 +40,6 @@ export class CreateMatch extends React.Component<
           <Row>
             <TextBox
               label="比赛名称"
-              placeholder="repository name"
               onValueChanged={this.onValueChanged}
               autoFocus={true}
             />
@@ -50,6 +48,7 @@ export class CreateMatch extends React.Component<
         <DialogFooter>
           <ButtonGroup>
             <Button onClick={this.props.onDismissed}>确定</Button>
+            <Button onClick={this.props.onDismissed}>Cancel</Button>
           </ButtonGroup>
         </DialogFooter>
       </Dialog>

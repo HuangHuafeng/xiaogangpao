@@ -12,6 +12,11 @@ import { App } from './app'
 import { MenuEvent } from '../menu-event'
 import { assertNever } from '../desktop'
 
+export enum PopupType {
+  Ablout = 1,
+  NewMatch,
+}
+
 const notImplemented = (name: string) => {
   const options = {
     type: 'info',
@@ -94,10 +99,10 @@ export class Manager {
   }
 
   /**
-   *
+   * Just dismiss (only) the top dialog, do nothing else
    * @param dialog the dialog justed submitted
    */
-  public onDialogSubmitted(dialog: string) {
+  public onPopupDismissed(dialog: string) {
     switch (dialog) {
       case 'about':
         this.closeTopDialog(dialog)
