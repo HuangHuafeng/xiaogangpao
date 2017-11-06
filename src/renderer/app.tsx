@@ -6,6 +6,8 @@ import { About } from './about'
 import { Manager, PopupType } from './manager'
 import { assertNever } from '../desktop'
 import { CreateMatch } from './create-match'
+import { MatchView } from './match-view'
+import { Match } from '../models/match'
 
 const notImplemented = (name: string) => {
   const options = {
@@ -25,11 +27,12 @@ export interface IAppProps {
 }
 
 interface IAppState {
-  openDialogs: PopupType[]
+  readonly openDialogs: PopupType[]
+  readonly match?: Match
 }
 
 export class App extends React.Component<IAppProps, IAppState> {
-  public constructor(props: any) {
+  public constructor(props: IAppProps) {
     super(props)
 
     this.state = this.props.manager.getAppState()
@@ -86,6 +89,7 @@ export class App extends React.Component<IAppProps, IAppState> {
         onDismissed={() => {
           this.onPopupDismissed(PopupType.NewMatch)
         }}
+        manager={this.props.manager}
       />
     )
   }
@@ -115,6 +119,7 @@ export class App extends React.Component<IAppProps, IAppState> {
     return (
       <div>
         <div>
+          <MatchView manager={this.props.manager} match={this.state.match} />
           <Clock key="clock" />
         </div>
         {this.renderDialogs()}

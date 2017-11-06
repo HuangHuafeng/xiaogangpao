@@ -9,6 +9,7 @@
 
 import { App } from './app'
 import { assertNever } from '../desktop'
+import { Match } from '../models/match'
 
 export enum PopupType {
   About = 1,
@@ -18,6 +19,7 @@ export enum PopupType {
 export class Manager {
   openDialogs: PopupType[]
   app?: App
+  match?: Match
 
   constructor() {
     this.openDialogs = []
@@ -26,6 +28,7 @@ export class Manager {
   public getAppState() {
     return {
       openDialogs: this.openDialogs,
+      match: this.match,
     }
   }
 
@@ -101,5 +104,17 @@ export class Manager {
     }
     this.openDialogs.pop()
     this.onPopupChanged(dialog)
+  }
+
+  /**
+   * create a new match and then work on the new match
+   * @param match the new Match
+   */
+  public newMatch(name: string, organizer?: string) {
+    this.match = new Match(name, organizer)
+
+    if (this.app !== undefined) {
+      this.app.setState({ match: this.match })
+    }
   }
 }

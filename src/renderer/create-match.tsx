@@ -8,39 +8,46 @@ import {
   Row,
   TextBox,
 } from '../desktop'
+import { Manager } from './manager'
 
 interface ICreateMatchProps {
+  readonly manager: Manager
   readonly onDismissed: () => void
 }
 
 interface ICreateMatchState {
-  readonly matchName: string
+  readonly name: string
+  readonly organizer: string
 }
 
 export class CreateMatch extends React.Component<
   ICreateMatchProps,
   ICreateMatchState
 > {
-  constructor(props: any) {
+  constructor(props: ICreateMatchProps) {
     super(props)
 
     this.state = {
-      matchName: '',
+      name: '',
+      organizer: '',
     }
   }
 
   private onOK = () => {
-    console.log('You clicked OK')
+    this.props.manager.newMatch(this.state.name, this.state.organizer)
     this.props.onDismissed()
   }
 
-  private onValueChanged = (value: string) => {
-    console.log(`onValueChanged(${value})`)
-    this.setState({ matchName: value })
+  private onNameChanged = (value: string) => {
+    this.setState({ name: value })
+  }
+
+  private onOrganizerChanged = (value: string) => {
+    this.setState({ organizer: value })
   }
 
   public render() {
-    const disabled = this.state.matchName.length === 0
+    const disabled = this.state.name.length === 0
 
     return (
       <Dialog
@@ -54,7 +61,14 @@ export class CreateMatch extends React.Component<
           <Row>
             <TextBox
               label="比赛名称"
-              onValueChanged={this.onValueChanged}
+              onValueChanged={this.onNameChanged}
+              autoFocus={true}
+            />
+          </Row>
+          <Row>
+            <TextBox
+              label="主办单位"
+              onValueChanged={this.onOrganizerChanged}
               autoFocus={true}
             />
           </Row>

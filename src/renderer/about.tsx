@@ -19,7 +19,7 @@ interface IAboutProps {
 interface IAboutState {}
 
 export class About extends React.Component<IAboutProps, IAboutState> {
-  constructor(props: any) {
+  constructor(props: IAboutProps) {
     super(props)
   }
 
