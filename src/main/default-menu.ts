@@ -1,25 +1,5 @@
 import * as Electron from 'electron'
-import { MenuEvent } from '../menu-event'
-
-type ClickHandler = (
-  menuItem: Electron.MenuItem,
-  browserWindow: Electron.BrowserWindow,
-  event: Electron.Event
-) => void
-
-/**
- * Utility function returning a Click event handler which, when invoked, emits
- * the provided menu event over IPC.
- */
-function emit(name: MenuEvent): ClickHandler {
-  return (menuItem, window) => {
-    if (window) {
-      window.webContents.send('menu-event', { name })
-    } else {
-      Electron.ipcMain.emit('menu-event', { name })
-    }
-  }
-}
+import { emit } from '../menu-event'
 
 export function buildDefaultMenu(): Electron.Menu {
   let template: Array<Electron.MenuItemConstructorOptions> = [
@@ -112,15 +92,13 @@ export function buildDefaultMenu(): Electron.Menu {
     const name = Electron.app.getName()
 
     // add the Exit menu item
-    let fileSubmenu = template[0]
-      .submenu as Electron.MenuItemConstructorOptions[]
+    let fileSubmenu = template[0].submenu as Electron.MenuItemConstructorOptions[]
     fileSubmenu.push({
       role: 'quit',
     })
 
     // add the About menu item
-    let submenu = template[template.length - 1]
-      .submenu as Electron.MenuItemConstructorOptions[]
+    let submenu = template[template.length - 1].submenu as Electron.MenuItemConstructorOptions[]
     submenu.unshift({
       label: `About ${name}`,
       click: emit('show-about'),

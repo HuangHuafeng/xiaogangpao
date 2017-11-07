@@ -16,6 +16,7 @@
   },
   "editor.tabSize": 2,
   "editor.formatOnSave": true,
+  "prettier.printWidth": 120,
   "prettier.semi": false,
   "prettier.singleQuote": true,
   "prettier.trailingComma": "es5"

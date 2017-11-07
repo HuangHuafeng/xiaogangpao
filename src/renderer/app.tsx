@@ -1,12 +1,11 @@
 import * as React from 'react'
 import * as Electron from 'electron'
 import { MenuEvent } from '../menu-event'
-import { Clock } from './clock'
 import { About } from './about'
 import { Manager, PopupType } from './manager'
 import { assertNever } from '../desktop'
 import { CreateMatch } from './create-match'
-import { MatchView } from './match-view'
+import { MatchView } from './matchview/match-view'
 import { Match } from '../models/match'
 
 const notImplemented = (name: string) => {
@@ -16,10 +15,7 @@ const notImplemented = (name: string) => {
     buttons: ['Ok'],
     message: `"${name}" is not implemented yet. It will come.`,
   }
-  Electron.remote.dialog.showMessageBox(
-    Electron.remote.getCurrentWindow(),
-    options
-  )
+  Electron.remote.dialog.showMessageBox(Electron.remote.getCurrentWindow(), options)
 }
 
 export interface IAppProps {
@@ -40,12 +36,9 @@ export class App extends React.Component<IAppProps, IAppState> {
 
     //this.onPopupDismissed = this.onPopupDismissed.bind(this);
 
-    Electron.ipcRenderer.on(
-      'menu-event',
-      (event: Electron.IpcMessageEvent, { name }: { name: MenuEvent }) => {
-        this.onMenuEvent(name)
-      }
-    )
+    Electron.ipcRenderer.on('menu-event', (event: Electron.IpcMessageEvent, { name }: { name: MenuEvent }) => {
+      this.onMenuEvent(name)
+    })
   }
 
   /**
@@ -117,11 +110,8 @@ export class App extends React.Component<IAppProps, IAppState> {
 
   public render() {
     return (
-      <div>
-        <div>
-          <MatchView manager={this.props.manager} match={this.state.match} />
-          <Clock key="clock" />
-        </div>
+      <div id="xiaogangpao">
+        <MatchView manager={this.props.manager} match={this.state.match} />
         {this.renderDialogs()}
       </div>
     )

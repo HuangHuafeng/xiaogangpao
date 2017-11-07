@@ -1,14 +1,5 @@
 import * as React from 'react'
-import {
-  Button,
-  ButtonGroup,
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  Octicon,
-  OcticonSymbol,
-  Row,
-} from '../desktop'
+import { Button, ButtonGroup, Dialog, DialogContent, DialogFooter, Octicon, OcticonSymbol, Row } from '../desktop'
 
 interface IAboutProps {
   readonly onDismissed: () => void
@@ -28,17 +19,17 @@ export class About extends React.Component<IAboutProps, IAboutState> {
     const version = this.props.applicationVersion
 
     return (
-      <Dialog
-        id="about"
-        onSubmit={this.props.onDismissed}
-        onDismissed={this.props.onDismissed}
-      >
+      <Dialog id="about" onSubmit={this.props.onDismissed} onDismissed={this.props.onDismissed}>
         <DialogContent>
           <Row className="logo">
             <Octicon symbol={OcticonSymbol.markGithub} />
           </Row>
-          <h2>{name}</h2>
-          <p>版本 {version}</p>
+          <Row className="name">
+            <h2>{name}</h2>
+          </Row>
+          <Row className="version">
+            <p>版本 {version}</p>
+          </Row>
         </DialogContent>
         <DialogFooter>
           <ButtonGroup>

@@ -1,0 +1,53 @@
+import * as Electron from 'electron'
+import * as React from 'react'
+import { Manager } from '../manager'
+import { Match } from '../../models/match'
+import { LinkButton } from '../../desktop'
+import { MenuEvent } from '../../menu-event'
+import { MatchHeader } from './match-header'
+import { MatchFooter } from './match-footer'
+import { MatchSetting } from './match-setting'
+
+interface IMatchViewProps {
+  readonly manager: Manager
+  readonly match?: Match
+}
+
+interface IMatchViewState {}
+
+export class MatchView extends React.Component<IMatchViewProps, IMatchViewState> {
+  constructor(props: IMatchViewProps) {
+    super(props)
+  }
+
+  public render() {
+    if (this.props.match === undefined) {
+      return this.renderNewMatch()
+    }
+
+    return (
+      <div id="match">
+        <MatchHeader manager={this.props.manager} match={this.props.match} />
+        <MatchSetting manager={this.props.manager} match={this.props.match} />
+        <MatchFooter manager={this.props.manager} match={this.props.match} />
+      </div>
+    )
+  }
+
+  private renderNewMatch() {
+    return (
+      <div id="match">
+        <LinkButton className="newmatch" onClick={() => this.sendMenuEvent('file-new')}>
+          <h2>创建比赛</h2>
+        </LinkButton>
+      </div>
+    )
+  }
+
+  /**
+   * send message to renderer process to simulate a menu event
+   */
+  private sendMenuEvent = (name: MenuEvent) => {
+    Electron.remote.getCurrentWindow().webContents.send('menu-event', { name })
+  }
+}

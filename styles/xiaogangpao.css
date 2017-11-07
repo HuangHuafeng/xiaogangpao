@@ -1,0 +1,12 @@
+div#match {
+  text-align: center;
+}
+
+div#match h1 {
+  color: royalblue;
+}
+
+div#match-setting a {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
