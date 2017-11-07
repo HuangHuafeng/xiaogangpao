@@ -6,7 +6,8 @@ div#match h1 {
   color: royalblue;
 }
 
-div#match-setting a {
+div#match-setting a,
+button {
   margin-left: 0.5em;
   margin-right: 0.5em;
 }
