@@ -9,4 +9,8 @@ module.exports = {
       __DEV__: 'true',
     }),
   ],
+  devtool: 'inline-source-map',
+  output: {
+    devtoolModuleFilenameTemplate: '[absolute-resource-path]',
+  },
 }
