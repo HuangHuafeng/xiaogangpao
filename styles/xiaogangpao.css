@@ -10,4 +10,10 @@ div#match-setting a,
 button {
   margin-left: 0.5em;
   margin-right: 0.5em;
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+div#players table {
+  margin: auto;
 }

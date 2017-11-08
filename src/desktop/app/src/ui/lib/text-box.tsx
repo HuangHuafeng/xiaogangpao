@@ -129,7 +129,8 @@ export class TextBox extends React.Component<ITextBoxProps, ITextBoxState> {
     const index = this.props.value.indexOf(before) + this.caretPosition
 
     if (index !== -1) {
-      this.instance.selectionStart = this.instance.selectionEnd = index
+      // comment this out since it causes issues when inputting Chinese, Huafeng
+      //this.instance.selectionStart = this.instance.selectionEnd = index
     }
   }
 
@@ -169,11 +170,7 @@ export class TextBox extends React.Component<ITextBoxProps, ITextBoxState> {
     }
 
     return (
-      <LinkButton
-        uri={this.props.labelLinkUri}
-        onClick={this.props.onLabelLinkClick}
-        className="link-label"
-      >
+      <LinkButton uri={this.props.labelLinkUri} onClick={this.props.onLabelLinkClick} className="link-label">
         {this.props.labelLinkText}
       </LinkButton>
     )

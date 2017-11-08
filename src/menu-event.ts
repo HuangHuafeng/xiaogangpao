@@ -1,12 +1,8 @@
 import * as Electron from 'electron'
 
-export type MenuEvent = 'file-new' | 'file-open' | 'file-save' | 'show-about'
+export type MenuEvent = 'file-new' | 'file-open' | 'file-save' | 'show-about' | 'add-player'
 
-type ClickHandler = (
-  menuItem: Electron.MenuItem,
-  browserWindow: Electron.BrowserWindow,
-  event: Electron.Event
-) => void
+type ClickHandler = (menuItem: Electron.MenuItem, browserWindow: Electron.BrowserWindow, event: Electron.Event) => void
 
 /**
  * Utility function returning a Click event handler which, when invoked, emits
@@ -20,4 +16,11 @@ export function emit(name: MenuEvent): ClickHandler {
       Electron.ipcMain.emit('menu-event', { name })
     }
   }
+}
+
+/**
+   * send message to renderer process to simulate a menu event
+   */
+export function sendMenuEvent(name: MenuEvent) {
+  Electron.remote.getCurrentWindow().webContents.send('menu-event', { name })
 }

@@ -14,6 +14,7 @@ import { Match } from '../models/match'
 export enum PopupType {
   About = 1,
   NewMatch,
+  AddPlayer,
 }
 
 export class Manager {
@@ -62,12 +63,13 @@ export class Manager {
   public onPopupDismissed(dialog: PopupType) {
     switch (dialog) {
       case PopupType.About:
-        this.closeTopDialog(dialog)
-        return
+        return this.closeTopDialog(dialog)
 
       case PopupType.NewMatch:
-        this.closeTopDialog(dialog)
-        return
+        return this.closeTopDialog(dialog)
+
+      case PopupType.AddPlayer:
+        return this.closeTopDialog(dialog)
 
       default:
         assertNever(dialog as never, `Unknown value: "${dialog}"`)
@@ -96,9 +98,7 @@ export class Manager {
       if (dialog !== this.openDialogs[this.openDialogs.length - 1]) {
         assertNever(
           dialog as never,
-          `"${dialog}" is NOT same as last one: "${this.openDialogs[
-            this.openDialogs.length - 1
-          ]}"`
+          `"${dialog}" is NOT same as last one: "${this.openDialogs[this.openDialogs.length - 1]}"`
         )
       }
     }
@@ -111,7 +111,25 @@ export class Manager {
    * @param match the new Match
    */
   public newMatch(name: string, organizer?: string) {
+    if (this.match) {
+      // do somethign with the current match?
+    }
+
     this.match = new Match(name, organizer)
+
+    if (this.app !== undefined) {
+      this.app.setState({ match: this.match })
+    }
+  }
+
+  /**
+   * create a new match and then work on the new match
+   * @param match the new Match
+   */
+  public addPlayer(name: string, organization: string = '') {
+    if (this.match) {
+      this.match.addPlayer(name, organization)
+    }
 
     if (this.app !== undefined) {
       this.app.setState({ match: this.match })

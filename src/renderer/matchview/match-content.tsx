@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Manager } from '../manager'
 import { Match } from '../../models/match'
+import { PlayerTable } from './player-table'
 
 interface IMatchContentProps {
   readonly manager: Manager
@@ -19,6 +20,10 @@ export class MatchContent extends React.Component<IMatchContentProps, IMatchCont
   }
 
   public render() {
-    return <div id="match-content">当前正在查看第{this.state.viewRound}轮</div>
+    return (
+      <div id="match-content">
+        <PlayerTable manager={this.props.manager} match={this.props.match} />
+      </div>
+    )
   }
 }

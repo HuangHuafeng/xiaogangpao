@@ -7,6 +7,7 @@ import { assertNever } from '../desktop'
 import { CreateMatch } from './create-match'
 import { MatchView } from './matchview/match-view'
 import { Match } from '../models/match'
+import { AddPlayer } from '../renderer/add-player'
 
 const notImplemented = (name: string) => {
   const options = {
@@ -53,6 +54,9 @@ export class App extends React.Component<IAppProps, IAppState> {
       case 'file-new':
         return this.props.manager.showPopup(PopupType.NewMatch)
 
+      case 'add-player':
+        return this.props.manager.showPopup(PopupType.AddPlayer)
+
       default:
         return notImplemented(event)
     }
@@ -70,6 +74,9 @@ export class App extends React.Component<IAppProps, IAppState> {
       case PopupType.NewMatch:
         return this.renderNewMatchDialog()
 
+      case PopupType.AddPlayer:
+        return this.renderAddPlayerDialog()
+
       default:
         return assertNever(name as never, `Unknown dialog: ${name}`)
     }
@@ -81,6 +88,18 @@ export class App extends React.Component<IAppProps, IAppState> {
         key="newmatch"
         onDismissed={() => {
           this.onPopupDismissed(PopupType.NewMatch)
+        }}
+        manager={this.props.manager}
+      />
+    )
+  }
+
+  private renderAddPlayerDialog() {
+    return (
+      <AddPlayer
+        key="addplayer"
+        onDismissed={() => {
+          this.onPopupDismissed(PopupType.AddPlayer)
         }}
         manager={this.props.manager}
       />
