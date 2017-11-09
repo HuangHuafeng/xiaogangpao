@@ -8,6 +8,8 @@ import { CreateMatch } from './create-match'
 import { MatchView } from './matchview/match-view'
 import { Match } from '../models/match'
 import { AddPlayer } from '../renderer/add-player'
+import { RemovePlayer } from '../renderer/remove-player'
+import { EditPlayer } from '../renderer/edit-player'
 
 const notImplemented = (name: string) => {
   const options = {
@@ -77,9 +79,39 @@ export class App extends React.Component<IAppProps, IAppState> {
       case PopupType.AddPlayer:
         return this.renderAddPlayerDialog()
 
+      case PopupType.RemovePlayer:
+        return this.renderRemovePlayerDialog()
+
+      case PopupType.EditPlayer:
+        return this.renderEditPlayerDialog()
+
       default:
         return assertNever(name as never, `Unknown dialog: ${name}`)
     }
+  }
+
+  private renderEditPlayerDialog() {
+    return (
+      <EditPlayer
+        key="removeplayer"
+        onDismissed={() => {
+          this.onPopupDismissed(PopupType.EditPlayer)
+        }}
+        manager={this.props.manager}
+      />
+    )
+  }
+
+  private renderRemovePlayerDialog() {
+    return (
+      <RemovePlayer
+        key="removeplayer"
+        onDismissed={() => {
+          this.onPopupDismissed(PopupType.RemovePlayer)
+        }}
+        manager={this.props.manager}
+      />
+    )
   }
 
   private renderNewMatchDialog() {

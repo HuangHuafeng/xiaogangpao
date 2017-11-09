@@ -15,28 +15,26 @@ button {
 }
 
 div#players table {
+  border-collapse: collapse;
+  border-spacing: 0px;
   margin-left: auto;
   margin-right: auto;
-  width: 400px;
-  border: 1px solid red;
+  width: 600px;
+  border: 1px solid black;
 }
 
 div#players tbody {
   display: block;
-  height: 200px;
-  overflow: auto;
-}
-
-div#players table thead {
-  width: calc(100% - 1em);
+  height: 400px;
+  overflow: scroll;
 }
 
 div#players table thead tr {
   display: table;
-  width: 100%;
   table-layout: fixed;
   color: blue;
   background: lightblue;
+  width: 97.6%;
 }
 div#players table tbody tr {
   display: table;
@@ -44,6 +42,12 @@ div#players table tbody tr {
   table-layout: fixed;
 }
 
+div#players tr:hover {
+  background-color: #75e2e6;
+}
+
 th {
   border-left: 1px solid;
+  border-right: 1px solid;
+  border-bottom: 1px solid;
 }

@@ -33,7 +33,7 @@ export class AddPlayer extends React.Component<IAddPlayerProps, IAddPlayerState>
     this.setState({ name: value })
   }
 
-  private onorganizationChanged = (value: string) => {
+  private onOrganizationChanged = (value: string) => {
     this.setState({ organization: value })
   }
 
@@ -63,7 +63,7 @@ export class AddPlayer extends React.Component<IAddPlayerProps, IAddPlayerState>
               label="单位"
               className="organization"
               value={this.state.organization}
-              onValueChanged={this.onorganizationChanged}
+              onValueChanged={this.onOrganizationChanged}
               autoFocus={true}
             />
           </Row>

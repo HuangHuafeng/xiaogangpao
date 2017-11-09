@@ -15,12 +15,15 @@ export enum PopupType {
   About = 1,
   NewMatch,
   AddPlayer,
+  RemovePlayer,
+  EditPlayer,
 }
 
 export class Manager {
   openDialogs: PopupType[]
   app?: App
   match?: Match
+  playerToDeleteOrEdit: number | undefined
 
   constructor() {
     this.openDialogs = []
@@ -71,8 +74,14 @@ export class Manager {
       case PopupType.AddPlayer:
         return this.closeTopDialog(dialog)
 
+      case PopupType.RemovePlayer:
+        return this.closeTopDialog(dialog)
+
+      case PopupType.EditPlayer:
+        return this.closeTopDialog(dialog)
+
       default:
-        assertNever(dialog as never, `Unknown value: "${dialog}"`)
+        return assertNever(dialog as never, `Unknown value: "${dialog}"`)
     }
   }
 
@@ -134,5 +143,15 @@ export class Manager {
     if (this.app !== undefined) {
       this.app.setState({ match: this.match })
     }
+  }
+
+  public removePlayer(number: number) {
+    this.playerToDeleteOrEdit = number
+    this.showPopup(PopupType.RemovePlayer)
+  }
+
+  public editPlayer(number: number) {
+    this.playerToDeleteOrEdit = number
+    this.showPopup(PopupType.EditPlayer)
   }
 }
