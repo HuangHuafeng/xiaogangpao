@@ -129,7 +129,7 @@ export class TextBox extends React.Component<ITextBoxProps, ITextBoxState> {
     const index = this.props.value.indexOf(before) + this.caretPosition
 
     if (index !== -1) {
-      // comment this out since it causes issues when inputting Chinese, Huafeng
+      // Huafeng: comment this out since it causes issue when inputting Chinese
       //this.instance.selectionStart = this.instance.selectionEnd = index
     }
   }

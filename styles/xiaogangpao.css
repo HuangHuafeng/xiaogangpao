@@ -15,5 +15,35 @@ button {
 }
 
 div#players table {
-  margin: auto;
+  margin-left: auto;
+  margin-right: auto;
+  width: 400px;
+  border: 1px solid red;
+}
+
+div#players tbody {
+  display: block;
+  height: 200px;
+  overflow: auto;
+}
+
+div#players table thead {
+  width: calc(100% - 1em);
+}
+
+div#players table thead tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  color: blue;
+  background: lightblue;
+}
+div#players table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+th {
+  border-left: 1px solid;
 }
