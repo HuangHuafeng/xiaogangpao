@@ -27,6 +27,7 @@
     "webpack": "^3.8.1"
   },
   "dependencies": {
+    "assert": "^1.4.1",
     "classnames": "^2.2.5",
     "clean-webpack-plugin": "^0.1.17",
     "codemirror": "^5.31.0",

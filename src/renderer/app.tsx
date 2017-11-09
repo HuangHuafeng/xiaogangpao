@@ -1,9 +1,9 @@
 import * as React from 'react'
 import * as Electron from 'electron'
+import * as assert from 'assert'
 import { MenuEvent } from '../menu-event'
 import { About } from './about'
 import { Manager, PopupType } from './manager'
-import { assertNever } from '../desktop'
 import { CreateMatch } from './create-match'
 import { MatchView } from './matchview/match-view'
 import { Match } from '../models/match'
@@ -86,7 +86,8 @@ export class App extends React.Component<IAppProps, IAppState> {
         return this.renderEditPlayerDialog()
 
       default:
-        return assertNever(name as never, `Unknown dialog: ${name}`)
+        assert.ok(false, `Unknown dialog: ${name}`)
+        return
     }
   }
 

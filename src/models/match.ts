@@ -1,5 +1,5 @@
 import { Player } from './player'
-import { assertNever } from '../desktop'
+import * as assert from 'assert'
 
 export class Match {
   name: string
@@ -33,13 +33,24 @@ export class Match {
     this.players.push(new Player(this.generatePlayerNumber(), name, organization))
   }
 
+  /**
+   * generate a uniqe number for a new player.
+   */
   private generatePlayerNumber(): number {
-    let number = 1
-    if (this.players.length > 0) {
-      number = this.players[this.players.length - 1].number + 1
+    // step 1: generate an array that contains preferred numbers
+    let preferred = []
+    for (let index = 0; index <= this.players.length; index++) {
+      preferred.push(index + 1)
     }
-
-    return number
+    // step 2: remove the numbers that are already used by existing players
+    for (let index = 0; index < this.players.length; index++) {
+      const toBeRemoved = preferred.indexOf(this.players[index].number)
+      if (toBeRemoved !== -1) {
+        preferred.splice(toBeRemoved, 1)
+      }
+    }
+    // step 3: return the smallest number of remaining preferred numbers
+    return preferred[0]
   }
 
   /**
@@ -48,27 +59,50 @@ export class Match {
    */
   public removePlayer(number: number) {
     const index = this.players.findIndex(player => player.number === number)
-    if (index === -1) {
-      assertNever(index as never, `IMPOSSIBLE! failed to find the player: "${number}"`)
-    }
+    assert.ok(index !== -1, `IMPOSSIBLE! failed to find the player with number "${number}"`)
     this.players.splice(index, 1)
   }
 
+  /**
+   * update a player.
+   * This need to be considered in more depth. Just copy the object with "this.players[index] = player"
+   * may not be a good idea.
+   * @param number
+   * @param player
+   */
   public updatePlayer(number: number, player: Player) {
     const index = this.players.findIndex(player => player.number === number)
-    if (index === -1) {
-      assertNever(index as never, `IMPOSSIBLE! failed to find the player with number "${number}"`)
-    }
+    assert.ok(index !== -1, `IMPOSSIBLE! failed to find the player with number "${number}"`)
     this.players[index] = player
   }
 
   /**
    * return ** a copy ** of the player with number "number"
    * TODO: check npm module for deep copy
-   * @param number
+   * @param number number of the player
    */
-  public getPlayer(number: number): Player {
-    let player = this.players[this.players.findIndex(player => player.number === number)]
+  public getPlayerByNumber(number: number): Player | undefined {
+    const index = this.players.findIndex(player => player.number === number)
+    if (index === -1) {
+      return undefined
+    }
+
+    let player = this.players[index]
+    return JSON.parse(JSON.stringify(player))
+  }
+
+  /**
+   * return ** a copy ** of the player with name "name"
+   * TODO: check npm module for deep copy
+   * @param name name of the player
+   */
+  public getPlayerByName(name: string): Player | undefined {
+    const index = this.players.findIndex(player => player.name === name)
+    if (index === -1) {
+      return undefined
+    }
+
+    let player = this.players[index]
     return JSON.parse(JSON.stringify(player))
   }
 }

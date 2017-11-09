@@ -8,7 +8,7 @@
  */
 
 import { App } from './app'
-import { assertNever } from '../desktop'
+import * as assert from 'assert'
 import { Match } from '../models/match'
 
 export enum PopupType {
@@ -75,13 +75,16 @@ export class Manager {
         return this.closeTopDialog(dialog)
 
       case PopupType.RemovePlayer:
+        this.playerToDeleteOrEdit = undefined
         return this.closeTopDialog(dialog)
 
       case PopupType.EditPlayer:
+        this.playerToDeleteOrEdit = undefined
         return this.closeTopDialog(dialog)
 
       default:
-        return assertNever(dialog as never, `Unknown value: "${dialog}"`)
+        assert.ok(false, `Unknown value: "${dialog}"`)
+        return
     }
   }
 
@@ -105,10 +108,7 @@ export class Manager {
   private closeTopDialog(dialog?: PopupType) {
     if (dialog) {
       if (dialog !== this.openDialogs[this.openDialogs.length - 1]) {
-        assertNever(
-          dialog as never,
-          `"${dialog}" is NOT same as last one: "${this.openDialogs[this.openDialogs.length - 1]}"`
-        )
+        assert.ok(false, `"${dialog}" is NOT same as last one: "${this.openDialogs[this.openDialogs.length - 1]}"`)
       }
     }
     this.openDialogs.pop()

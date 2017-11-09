@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { Button, ButtonGroup, Dialog, DialogFooter, DialogContent, Row, TextBox } from '../desktop'
 import { Manager } from './manager'
-import { assertNever } from '../desktop'
+import { Player } from '../models/player'
+import * as assert from 'assert'
 
 interface IRemovePlayerProps {
   readonly manager: Manager
@@ -24,10 +25,15 @@ export class RemovePlayer extends React.Component<IRemovePlayerProps, IRemovePla
   }
 
   public render() {
-    if (!(this.props.manager.match && this.props.manager.playerToDeleteOrEdit)) {
-      return assertNever(undefined as never, `manager.match and manager.playerToDeleteOrEdit are both undefined!`)
+    if (!this.props.manager.match || !this.props.manager.playerToDeleteOrEdit) {
+      assert.ok(false, `manager.match or manager.playerToDeleteOrEdit is undefined!`)
+      return null
     }
-    const player = this.props.manager.match.getPlayer(this.props.manager.playerToDeleteOrEdit)
+    const player = this.props.manager.match.getPlayerByNumber(this.props.manager.playerToDeleteOrEdit) as Player
+    assert.ok(
+      player != undefined,
+      `IMPOSSIBLE! failed to get the player with number "${this.props.manager.playerToDeleteOrEdit}"!`
+    )
 
     return (
       <Dialog
