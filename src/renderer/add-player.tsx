@@ -1,6 +1,19 @@
 import * as React from 'react'
-import { Button, ButtonGroup, Dialog, DialogContent, DialogFooter, Row, TextBox } from '../desktop'
+import {
+  Button,
+  ButtonGroup,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  Row,
+  TextBox,
+  Octicon,
+  OcticonSymbol,
+} from '../desktop'
 import { Manager } from './manager'
+import { Player } from '../models/player'
+import * as assert from 'assert'
+import { Match } from '../models/match'
 
 interface IAddPlayerProps {
   readonly manager: Manager
@@ -29,6 +42,12 @@ export class AddPlayer extends React.Component<IAddPlayerProps, IAddPlayerState>
     this.setState({ name: '' })
   }
 
+  private doesNameExist(): Player | undefined {
+    assert.ok(this.props.manager.match, 'this.props.manager.match is undefined!')
+    const match = this.props.manager.match as Match
+    return match.getPlayerByName(this.state.name)
+  }
+
   private onNameChanged = (value: string) => {
     this.setState({ name: value })
   }
@@ -37,8 +56,21 @@ export class AddPlayer extends React.Component<IAddPlayerProps, IAddPlayerState>
     this.setState({ organization: value })
   }
 
+  private renderDuplicateWarning(player: Player | undefined) {
+    if (player === undefined) {
+      return null
+    }
+    return (
+      <Row className="warning-helper-text">
+        <Octicon symbol={OcticonSymbol.alert} />
+        姓名有冲突：已存在编号"{player.number}"，姓名"{player.name}"的选手!
+      </Row>
+    )
+  }
+
   public render() {
-    const disabled = this.state.name.length === 0
+    const player = this.doesNameExist()
+    const disabled = this.state.name.length === 0 || player !== undefined
 
     return (
       <Dialog
@@ -49,6 +81,7 @@ export class AddPlayer extends React.Component<IAddPlayerProps, IAddPlayerState>
         onSubmit={this.onOK}
       >
         <DialogContent>
+          {this.renderDuplicateWarning(player)}
           <Row>
             <TextBox
               label="姓名"

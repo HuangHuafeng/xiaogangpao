@@ -10,6 +10,7 @@
 import { App } from './app'
 import * as assert from 'assert'
 import { Match } from '../models/match'
+import * as clone from 'clone'
 
 export enum PopupType {
   About = 1,
@@ -30,10 +31,10 @@ export class Manager {
   }
 
   public getAppState() {
-    return {
+    return clone({
       openDialogs: this.openDialogs,
       match: this.match,
-    }
+    })
   }
 
   /**
@@ -51,19 +52,15 @@ export class Manager {
    * because it can cause issues (like duplicated key, id of the dialog element).
    * @param dialog the dialog to be checked
    */
-  private isDialogAlreadyOpen(dialog: PopupType) {
-    return (
-      this.openDialogs.findIndex(value => {
-        return value === dialog
-      }) !== -1
-    )
+  private isDialogAlreadyOpen(dialog: PopupType): boolean {
+    return this.openDialogs.findIndex(value => value === dialog) !== -1
   }
 
   /**
    * Just dismiss (only) the top dialog, do nothing else
    * @param dialog the dialog justed submitted
    */
-  public onPopupDismissed(dialog: PopupType) {
+  public onPopupDismissed(dialog: PopupType): void {
     switch (dialog) {
       case PopupType.About:
         return this.closeTopDialog(dialog)

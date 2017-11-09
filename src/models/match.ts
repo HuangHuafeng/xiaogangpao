@@ -1,5 +1,6 @@
 import { Player } from './player'
 import * as assert from 'assert'
+import * as clone from 'clone'
 
 export class Match {
   name: string
@@ -30,7 +31,8 @@ export class Match {
   }
 
   public addPlayer(name: string, organization: string = '') {
-    this.players.push(new Player(this.generatePlayerNumber(), name, organization))
+    const newPlayer = new Player(this.generatePlayerNumber(), name, organization)
+    this.players.push(newPlayer)
   }
 
   /**
@@ -54,7 +56,7 @@ export class Match {
   }
 
   /**
-   *
+   * remove the player with number "number"
    * @param number
    */
   public removePlayer(number: number) {
@@ -65,20 +67,17 @@ export class Match {
 
   /**
    * update a player.
-   * This need to be considered in more depth. Just copy the object with "this.players[index] = player"
-   * may not be a good idea.
    * @param number
    * @param player
    */
   public updatePlayer(number: number, player: Player) {
     const index = this.players.findIndex(player => player.number === number)
     assert.ok(index !== -1, `IMPOSSIBLE! failed to find the player with number "${number}"`)
-    this.players[index] = player
+    this.players[index] = clone(player)
   }
 
   /**
    * return ** a copy ** of the player with number "number"
-   * TODO: check npm module for deep copy
    * @param number number of the player
    */
   public getPlayerByNumber(number: number): Player | undefined {
@@ -87,13 +86,11 @@ export class Match {
       return undefined
     }
 
-    let player = this.players[index]
-    return JSON.parse(JSON.stringify(player))
+    return clone(this.players[index])
   }
 
   /**
    * return ** a copy ** of the player with name "name"
-   * TODO: check npm module for deep copy
    * @param name name of the player
    */
   public getPlayerByName(name: string): Player | undefined {
@@ -102,7 +99,6 @@ export class Match {
       return undefined
     }
 
-    let player = this.players[index]
-    return JSON.parse(JSON.stringify(player))
+    return clone(this.players[index])
   }
 }

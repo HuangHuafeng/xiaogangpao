@@ -30,6 +30,10 @@
   version "2.2.3"
   resolved "http://registry.npm.taobao.org/@types/classnames/download/@types/classnames-2.2.3.tgz#3f0ff6873da793870e20a260cada55982f38a9e5"
 
+"@types/clone@^0.1.30":
+  version "0.1.30"
+  resolved "http://registry.npm.taobao.org/@types/clone/download/@types/clone-0.1.30.tgz#e7365648c1b42136a59c7d5040637b3b5c83b614"
+
 "@types/node@*":
   version "8.0.47"
   resolved "http://registry.npm.taobao.org/@types/node/download/@types/node-8.0.47.tgz#968e596f91acd59069054558a00708c445ca30c2"
@@ -1495,6 +1499,10 @@ clone-deep@^0.3.0:
 clone@^1.0.2:
   version "1.0.2"
   resolved "http://registry.npm.taobao.org/clone/download/clone-1.0.2.tgz#260b7a99ebb1edfe247538175f783243cb19d149"
+
+clone@^2.1.1:
+  version "2.1.1"
+  resolved "http://registry.npm.taobao.org/clone/download/clone-2.1.1.tgz#d217d1e961118e3ac9a4b8bba3285553bf647cdb"
 
 co@^4.6.0:
   version "4.6.0"
