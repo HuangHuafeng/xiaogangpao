@@ -10,6 +10,7 @@ import { AddPlayer } from './add-player'
 import { RemovePlayer } from './remove-player'
 import { EditPlayer } from './edit-player'
 import { EditMatch } from './edit-match'
+import { RemoveAllPlayers } from './remove-all-players'
 
 const notImplemented = (name: string) => {
   const options = {
@@ -30,10 +31,6 @@ interface IAppState {}
 export class App extends React.Component<IAppProps, IAppState> {
   public constructor(props: IAppProps) {
     super(props)
-
-    //this.state = this.props.manager.getAppState()
-
-    //this.onPopupDismissed = this.onPopupDismissed.bind(this);
 
     Electron.ipcRenderer.on('menu-event', (event: Electron.IpcMessageEvent, { name }: { name: MenuEvent }) => {
       this.onMenuEvent(name)
@@ -61,6 +58,9 @@ export class App extends React.Component<IAppProps, IAppState> {
 
       case 'edit-match':
         return this.props.manager.showPopup(PopupType.EditMatch)
+
+      case 'remove-all-players':
+        return this.props.manager.showPopup(PopupType.RemoveAllPlayers)
 
       default:
         return notImplemented(event)
@@ -91,6 +91,9 @@ export class App extends React.Component<IAppProps, IAppState> {
       case PopupType.EditMatch:
         return this.renderEditMatchDialog()
 
+      case PopupType.RemoveAllPlayers:
+        return this.renderRemoveAllPlayersDialog()
+
       default:
         assert.ok(false, `Unknown dialog: ${name}`)
         return
@@ -115,6 +118,18 @@ export class App extends React.Component<IAppProps, IAppState> {
         key="removeplayer"
         onDismissed={() => {
           this.onPopupDismissed(PopupType.RemovePlayer)
+        }}
+        manager={this.props.manager}
+      />
+    )
+  }
+
+  private renderRemoveAllPlayersDialog() {
+    return (
+      <RemoveAllPlayers
+        key="removeallplayers"
+        onDismissed={() => {
+          this.onPopupDismissed(PopupType.RemoveAllPlayers)
         }}
         manager={this.props.manager}
       />

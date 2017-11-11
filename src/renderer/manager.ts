@@ -20,6 +20,7 @@ export enum PopupType {
   RemovePlayer,
   EditPlayer,
   EditMatch,
+  RemoveAllPlayers,
 }
 
 export class Manager {
@@ -99,6 +100,9 @@ export class Manager {
         return this.closeTopDialog(dialog)
 
       case PopupType.EditMatch:
+        return this.closeTopDialog(dialog)
+
+      case PopupType.RemoveAllPlayers:
         return this.closeTopDialog(dialog)
 
       default:
@@ -186,10 +190,26 @@ export class Manager {
   public removePlayerConfirmed(number: number) {
     assert.ok(number === this.playerToDeleteOrEdit, 'something wrong!')
     this.match.removePlayer(number)
+    this.updateAppState()
   }
 
   public editPlayer(number: number) {
     this.playerToDeleteOrEdit = number
     this.showPopup(PopupType.EditPlayer)
+  }
+
+  /**
+   * remove all players, need further confirmation.
+   */
+  public removeAllPlayers() {
+    this.showPopup(PopupType.RemoveAllPlayers)
+  }
+
+  /**
+   * remove all players. this is after user confirmation!
+   */
+  public removeAllPlayersConfirmed() {
+    this.match.removeAllPlayers()
+    this.updateAppState()
   }
 }

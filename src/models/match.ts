@@ -135,6 +135,13 @@ export class Match {
   }
 
   /**
+   * remove all players
+   */
+  public removeAllPlayers() {
+    this.players = []
+  }
+
+  /**
    * It's probably OK to not use clone, but we use it in order to be more safe.
    * Any change should be make through the public interface, not by accessing
    * the data directly!

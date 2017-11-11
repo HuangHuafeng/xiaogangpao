@@ -1,6 +1,13 @@
 import * as Electron from 'electron'
 
-export type MenuEvent = 'file-new' | 'file-open' | 'file-save' | 'show-about' | 'add-player' | 'edit-match'
+export type MenuEvent =
+  | 'file-new'
+  | 'file-open'
+  | 'file-save'
+  | 'show-about'
+  | 'add-player'
+  | 'edit-match'
+  | 'remove-all-players'
 
 type ClickHandler = (menuItem: Electron.MenuItem, browserWindow: Electron.BrowserWindow, event: Electron.Event) => void
 

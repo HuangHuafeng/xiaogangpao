@@ -31,13 +31,13 @@ export class MatchContent extends React.Component<IMatchContentProps, IMatchCont
   private renderSettings() {
     return (
       <div id="match-setting">
-        <Button className="newmatch" onClick={() => sendMenuEvent('edit-match')}>
+        <Button className="matchsetting" onClick={() => sendMenuEvent('edit-match')}>
           比赛设置
         </Button>
-        <Button className="newmatch" onClick={this.onManagePlayers}>
+        <Button className="matchsetting" onClick={this.onManagePlayers}>
           选手
         </Button>
-        <Button className="newmatch" onClick={this.onManageRounds}>
+        <Button className="matchsetting" onClick={this.onManageRounds}>
           轮次
         </Button>
       </div>
