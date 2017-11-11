@@ -51,3 +51,7 @@ th {
   border-right: 1px solid;
   border-bottom: 1px solid;
 }
+
+tbody a.link-button-component {
+  margin: 0px 2px 0px 2px;
+}

@@ -12,8 +12,6 @@ import {
 } from '../desktop'
 import { Manager } from './manager'
 import { Player } from '../models/player'
-import * as assert from 'assert'
-import { Match } from '../models/match'
 
 interface IAddPlayerProps {
   readonly manager: Manager
@@ -43,9 +41,7 @@ export class AddPlayer extends React.Component<IAddPlayerProps, IAddPlayerState>
   }
 
   private doesNameExist(): Player | undefined {
-    assert.ok(this.props.manager.match, 'this.props.manager.match is undefined!')
-    const match = this.props.manager.match as Match
-    return match.getPlayerByName(this.state.name)
+    return this.props.manager.getMatch().getPlayerByName(this.state.name)
   }
 
   private onNameChanged = (value: string) => {
@@ -60,10 +56,11 @@ export class AddPlayer extends React.Component<IAddPlayerProps, IAddPlayerState>
     if (player === undefined) {
       return null
     }
+
     return (
       <Row className="warning-helper-text">
         <Octicon symbol={OcticonSymbol.alert} />
-        姓名有冲突：已存在编号"{player.number}"，姓名"{player.name}"的选手!
+        姓名有冲突：已存在编号"{player.getNumber()}"，姓名"{player.getName()}"的选手!
       </Row>
     )
   }
@@ -73,13 +70,7 @@ export class AddPlayer extends React.Component<IAddPlayerProps, IAddPlayerState>
     const disabled = this.state.name.length === 0 || player !== undefined
 
     return (
-      <Dialog
-        id="addplayer"
-        title="新增参赛人员"
-        dismissable={false}
-        onDismissed={this.props.onDismissed}
-        onSubmit={this.onOK}
-      >
+      <Dialog id="addplayer" title="增加选手" dismissable={false} onDismissed={this.props.onDismissed} onSubmit={this.onOK}>
         <DialogContent>
           {this.renderDuplicateWarning(player)}
           <Row>
@@ -106,7 +97,7 @@ export class AddPlayer extends React.Component<IAddPlayerProps, IAddPlayerState>
             <Button type="submit" disabled={disabled}>
               增加
             </Button>
-            <Button onClick={this.props.onDismissed}>完成</Button>
+            <Button onClick={this.props.onDismissed}>取消</Button>
           </ButtonGroup>
         </DialogFooter>
       </Dialog>

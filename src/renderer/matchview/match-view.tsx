@@ -5,7 +5,6 @@ import { LinkButton } from '../../desktop'
 import { sendMenuEvent } from '../../menu-event'
 import { MatchHeader } from './match-header'
 import { MatchFooter } from './match-footer'
-import { MatchSetting } from './match-setting'
 import { MatchContent } from './match-content'
 
 interface IMatchViewProps {
@@ -28,7 +27,6 @@ export class MatchView extends React.Component<IMatchViewProps, IMatchViewState>
     return (
       <div id="match">
         <MatchHeader manager={this.props.manager} match={this.props.match} />
-        <MatchSetting manager={this.props.manager} match={this.props.match} />
         <MatchContent manager={this.props.manager} match={this.props.match} />
         <MatchFooter manager={this.props.manager} match={this.props.match} />
       </div>

@@ -17,8 +17,8 @@ export class MatchHeader extends React.Component<IMatchHeaderProps, IMatchHeader
   public render() {
     return (
       <div id="match-header">
-        <h1>{this.props.match.name}</h1>
-        <h3>{this.props.match.organizer}</h3>
+        <h1>{this.props.match.getName()}</h1>
+        <h3>{this.props.match.getOrganizer()}</h3>
       </div>
     )
   }

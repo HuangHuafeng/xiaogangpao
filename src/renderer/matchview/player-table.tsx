@@ -21,16 +21,15 @@ export class PlayerTable extends React.Component<IPlayerTableProps, IPlayerTable
   public render() {
     return (
       <div id="players">
+        <div id="player_modification">
+          <Button className="addplayer" onClick={() => sendMenuEvent('add-player')}>
+            增加选手
+          </Button>
+        </div>
         <table>
           <PlayerTableHeader manager={this.props.manager} />
           <PlayerTableBody manager={this.props.manager} match={this.props.match} />
         </table>
-        <div id="player_modification">
-          <Button className="addplayer" onClick={() => sendMenuEvent('add-player')}>
-            增加
-          </Button>
-          <Button className="deleteplayer">删除</Button>
-        </div>
       </div>
     )
   }

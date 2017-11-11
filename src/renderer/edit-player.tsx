@@ -12,8 +12,6 @@ import {
 } from '../desktop'
 import { Manager } from './manager'
 import { Player } from '../models/player'
-import * as assert from 'assert'
-import { Match } from '../models/match'
 
 interface IEditPlayerProps {
   readonly manager: Manager
@@ -27,40 +25,31 @@ interface IEditPlayerState {
 }
 
 export class EditPlayer extends React.Component<IEditPlayerProps, IEditPlayerState> {
-  player: Player
+  private player: Player
 
   constructor(props: IEditPlayerProps) {
     super(props)
 
-    if (!this.props.manager.match || !this.props.manager.playerToDeleteOrEdit) {
-      assert.ok(false, 'manager.match or manager.playerToDeleteOrEdit is undefined!')
-      return
+    let player = this.props.manager.getPlayerToDeleteOrEdit()
+    if (player === undefined) {
+      throw new Error('UNEXPECTED! there is no player to be edited!')
     }
-    const player = this.props.manager.match.getPlayerByNumber(this.props.manager.playerToDeleteOrEdit) as Player
-    assert.ok(
-      player != undefined,
-      `IMPOSSIBLE! failed to get the player with number "${this.props.manager.playerToDeleteOrEdit}"!`
-    )
     this.player = player
 
     this.state = {
-      number: player.number.toString(),
-      name: player.name,
-      organization: player.organization,
+      number: this.player.getNumber().toString(),
+      name: this.player.getName(),
+      organization: this.player.getOrganization(),
     }
   }
 
   private onOK = () => {
-    if (!this.props.manager.match || !this.props.manager.playerToDeleteOrEdit) {
-      assert.ok(false, `manager.match or manager.playerToDeleteOrEdit is undefined!`)
-      return
-    }
+    let number = this.player.getNumber()
+    this.player.setNumber(Number(this.state.number))
+    this.player.setName(this.state.name)
+    this.player.setOrganization(this.state.organization)
 
-    this.player.number = Number(this.state.number)
-    this.player.name = this.state.name
-    this.player.organization = this.state.organization
-
-    this.props.manager.match.updatePlayer(this.props.manager.playerToDeleteOrEdit, this.player)
+    this.props.manager.updatePlayer(number, this.player)
     this.props.onDismissed()
   }
 
@@ -70,13 +59,14 @@ export class EditPlayer extends React.Component<IEditPlayerProps, IEditPlayerSta
       return undefined
     }
 
-    const match = this.props.manager.match as Match
+    const match = this.props.manager.getMatch()
     const player = match.getPlayerByNumber(number)
     if (player === undefined) {
       return undefined
     }
 
-    if (player.number == this.player.number && player.name == this.player.name) {
+    // if the the player under editting
+    if (player.getNumber() == this.player.getNumber() && player.getName() == this.player.getName()) {
       return undefined
     }
 
@@ -84,13 +74,14 @@ export class EditPlayer extends React.Component<IEditPlayerProps, IEditPlayerSta
   }
 
   private doesNameExist(): Player | undefined {
-    const match = this.props.manager.match as Match
+    const match = this.props.manager.getMatch()
     const player = match.getPlayerByName(this.state.name)
     if (player === undefined) {
       return undefined
     }
 
-    if (player.number == this.player.number && player.name == this.player.name) {
+    // if the the player under editting
+    if (player.getNumber() == this.player.getNumber() && player.getName() == this.player.getName()) {
       return undefined
     }
 
@@ -119,14 +110,26 @@ export class EditPlayer extends React.Component<IEditPlayerProps, IEditPlayerSta
     return (
       <Row className="warning-helper-text">
         <Octicon symbol={OcticonSymbol.alert} />
-        编号或姓名有冲突：已存在编号"{player.number}"，姓名"{player.name}"的选手!
+        编号或姓名有冲突：已存在编号"{player.getNumber()}"，姓名"{player.getName()}"的选手!
       </Row>
+    )
+  }
+
+  private isChanged(): boolean {
+    return (
+      this.state.name !== this.player.getName() ||
+      this.state.organization !== this.player.getOrganization() ||
+      this.state.number !== this.player.getNumber().toString()
     )
   }
 
   public render() {
     const player = this.doesNumberExist() || this.doesNameExist()
-    const disabled = this.state.name.length === 0 || this.state.number.length === 0 || player !== undefined
+    const disabled =
+      this.state.name.length === 0 ||
+      this.state.number.length === 0 ||
+      player !== undefined ||
+      this.isChanged() === false
 
     return (
       <Dialog

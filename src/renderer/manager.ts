@@ -11,6 +11,7 @@ import { App } from './app'
 import * as assert from 'assert'
 import { Match } from '../models/match'
 import * as clone from 'clone'
+import { Player } from '../models/player'
 
 export enum PopupType {
   About = 1,
@@ -18,33 +19,51 @@ export enum PopupType {
   AddPlayer,
   RemovePlayer,
   EditPlayer,
+  EditMatch,
 }
 
 export class Manager {
-  openDialogs: PopupType[]
-  app?: App
-  match?: Match
-  playerToDeleteOrEdit: number | undefined
+  private openDialogs: PopupType[]
+  private app?: App
+  private match: Match
+  private playerToDeleteOrEdit: number | undefined
 
   constructor() {
     this.openDialogs = []
+    this.match = new Match('无名')
   }
 
-  public getAppState() {
-    return clone({
-      openDialogs: this.openDialogs,
-      match: this.match,
-    })
+  public getMatch(): Match {
+    return clone(this.match)
+  }
+
+  public updateMatch(match: Match) {
+    this.match = clone(match)
+  }
+
+  public getOpenDialogs() {
+    return clone(this.openDialogs)
   }
 
   /**
-   * We can only manage one app and it can NOT be changed
-   * @param app the app that is managed by this manager
+   * get the player that is to be deleted or edited
    */
-  public registerApp(app: App) {
-    if (this.app === undefined) {
-      this.app = app
+  public getPlayerToDeleteOrEdit(): Player | undefined {
+    if (this.playerToDeleteOrEdit !== undefined) {
+      return this.match.getPlayerByNumber(this.playerToDeleteOrEdit)
     }
+
+    return undefined
+  }
+
+  /**
+   * update a player.
+   * @param number
+   * @param player
+   */
+  public updatePlayer(number: number, player: Player) {
+    assert.ok(number === this.playerToDeleteOrEdit, 'something wrong!')
+    this.match.updatePlayer(number, player)
   }
 
   /**
@@ -79,6 +98,9 @@ export class Manager {
         this.playerToDeleteOrEdit = undefined
         return this.closeTopDialog(dialog)
 
+      case PopupType.EditMatch:
+        return this.closeTopDialog(dialog)
+
       default:
         assert.ok(false, `Unknown value: "${dialog}"`)
         return
@@ -88,13 +110,7 @@ export class Manager {
   public showPopup(dialog: PopupType) {
     if (!this.isDialogAlreadyOpen(dialog)) {
       this.openDialogs.push(dialog)
-      this.onPopupChanged(dialog)
-    }
-  }
-
-  private onPopupChanged(dialog?: PopupType) {
-    if (this.app !== undefined) {
-      this.app.setState({ openDialogs: this.openDialogs })
+      this.updateAppState()
     }
   }
 
@@ -109,22 +125,37 @@ export class Manager {
       }
     }
     this.openDialogs.pop()
-    this.onPopupChanged(dialog)
+    this.updateAppState()
   }
 
   /**
    * create a new match and then work on the new match
    * @param match the new Match
    */
-  public newMatch(name: string, organizer?: string) {
+  public newMatch(name: string, organizer: string = '') {
     if (this.match) {
       // do somethign with the current match?
     }
 
     this.match = new Match(name, organizer)
+    this.updateAppState()
+  }
 
+  /**
+   * We can only manage one app and it can NOT be changed
+   * @param app the app that is managed by this manager
+   */
+  public registerApp(app: App) {
+    if (this.app === undefined) {
+      this.app = app
+      this.updateAppState()
+    }
+  }
+
+  private updateAppState() {
     if (this.app !== undefined) {
-      this.app.setState({ match: this.match })
+      let state = { match: this.match }
+      this.app.setState(clone(state))
     }
   }
 
@@ -137,14 +168,24 @@ export class Manager {
       this.match.addPlayer(name, organization)
     }
 
-    if (this.app !== undefined) {
-      this.app.setState({ match: this.match })
-    }
+    this.updateAppState()
   }
 
+  /**
+   * remove the player with number "number", need further confirmation.
+   */
   public removePlayer(number: number) {
     this.playerToDeleteOrEdit = number
     this.showPopup(PopupType.RemovePlayer)
+  }
+
+  /**
+   * remove the player with number "number", this is after confirmation!
+   * @param number
+   */
+  public removePlayerConfirmed(number: number) {
+    assert.ok(number === this.playerToDeleteOrEdit, 'something wrong!')
+    this.match.removePlayer(number)
   }
 
   public editPlayer(number: number) {

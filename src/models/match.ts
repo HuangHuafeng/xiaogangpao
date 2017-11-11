@@ -1,16 +1,34 @@
 import { Player } from './player'
-import * as assert from 'assert'
 import * as clone from 'clone'
 
-export class Match {
-  name: string
-  organizer?: string
-  players: Player[]
+export enum MatchStatus {
+  NotStarted,
+  OnGoingPairring,
+  OnGoingFighting,
+  Finished,
+}
 
-  constructor(name: string, organizer?: string) {
+export class Match {
+  private name: string
+  private organizer: string
+  private players: Player[]
+  private totalRounds: number
+
+  /**
+   * 0: match has not started
+   * =totalRounds: match is in last round
+   * >totalRounds: match has finished
+   */
+  private currentRound: number
+  private status: MatchStatus
+
+  constructor(name: string, organizer: string = '') {
     this.name = name
     this.organizer = organizer
     this.players = []
+    this.totalRounds = 0
+    this.currentRound = 0
+    this.status = MatchStatus.NotStarted
 
     if (__DEV__) {
       this.addPlayer('赵子雨', '湖北棋牌运动管理中心')
@@ -23,13 +41,62 @@ export class Match {
       this.addPlayer('孙勇征', '上海金外滩队')
       this.addPlayer('何文哲', '中国棋院杭州分院')
       this.addPlayer('李炳贤', '中国棋院杭州分院')
-      this.addPlayer('武俊强', '	四川成都龙翔通讯队')
+      this.addPlayer('武俊强', '四川成都龙翔通讯队')
       this.addPlayer('于幼华', '浙江非奥项目管理中心	')
       this.addPlayer('程宇东', '广东碧桂园')
       this.addPlayer('黎德志', '煤矿体协')
     }
   }
 
+  public getStatus() {
+    return this.status
+  }
+
+  public getTotalRounds() {
+    return this.totalRounds
+  }
+
+  public getCurrentRound() {
+    return this.currentRound
+  }
+
+  public getPlayers() {
+    return clone(this.players)
+  }
+
+  public setTotalRounds(totalRounds: number) {
+    if (totalRounds < 1) {
+      throw new Error('totalRounds is less than 1!')
+    }
+
+    this.totalRounds = totalRounds
+  }
+
+  public getName() {
+    return this.name
+  }
+
+  public setName(name: string) {
+    if (name.length === 0) {
+      throw new Error('name is empty!')
+    }
+
+    this.name = name
+  }
+
+  public getOrganizer() {
+    return this.organizer
+  }
+
+  public setOrganizer(organizer: string) {
+    this.organizer = organizer
+  }
+
+  /**
+   * add a player to the match
+   * @param name
+   * @param organization
+   */
   public addPlayer(name: string, organization: string = '') {
     const newPlayer = new Player(this.generatePlayerNumber(), name, organization)
     this.players.push(newPlayer)
@@ -46,7 +113,7 @@ export class Match {
     }
     // step 2: remove the numbers that are already used by existing players
     for (let index = 0; index < this.players.length; index++) {
-      const toBeRemoved = preferred.indexOf(this.players[index].number)
+      const toBeRemoved = preferred.indexOf(this.players[index].getNumber())
       if (toBeRemoved !== -1) {
         preferred.splice(toBeRemoved, 1)
       }
@@ -60,10 +127,18 @@ export class Match {
    * @param number
    */
   public removePlayer(number: number) {
-    const index = this.players.findIndex(player => player.number === number)
-    assert.ok(index !== -1, `IMPOSSIBLE! failed to find the player with number "${number}"`)
+    const index = this.players.findIndex(player => player.getNumber() === number)
+    if (index === -1) {
+      throw new Error(`UNEXPECTED! failed to find the player with number "${number}"`)
+    }
     this.players.splice(index, 1)
   }
+
+  /**
+   * It's probably OK to not use clone, but we use it in order to be more safe.
+   * Any change should be make through the public interface, not by accessing
+   * the data directly!
+   */
 
   /**
    * update a player.
@@ -71,8 +146,10 @@ export class Match {
    * @param player
    */
   public updatePlayer(number: number, player: Player) {
-    const index = this.players.findIndex(player => player.number === number)
-    assert.ok(index !== -1, `IMPOSSIBLE! failed to find the player with number "${number}"`)
+    const index = this.players.findIndex(player => player.getNumber() === number)
+    if (index === -1) {
+      throw new Error(`UNEXPECTED! failed to find the player with number "${number}"`)
+    }
     this.players[index] = clone(player)
   }
 
@@ -81,7 +158,7 @@ export class Match {
    * @param number number of the player
    */
   public getPlayerByNumber(number: number): Player | undefined {
-    const index = this.players.findIndex(player => player.number === number)
+    const index = this.players.findIndex(player => player.getNumber() === number)
     if (index === -1) {
       return undefined
     }
@@ -94,7 +171,7 @@ export class Match {
    * @param name name of the player
    */
   public getPlayerByName(name: string): Player | undefined {
-    const index = this.players.findIndex(player => player.name === name)
+    const index = this.players.findIndex(player => player.getName() === name)
     if (index === -1) {
       return undefined
     }

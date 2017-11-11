@@ -6,10 +6,10 @@ import { About } from './about'
 import { Manager, PopupType } from './manager'
 import { CreateMatch } from './create-match'
 import { MatchView } from './matchview/match-view'
-import { Match } from '../models/match'
-import { AddPlayer } from '../renderer/add-player'
-import { RemovePlayer } from '../renderer/remove-player'
-import { EditPlayer } from '../renderer/edit-player'
+import { AddPlayer } from './add-player'
+import { RemovePlayer } from './remove-player'
+import { EditPlayer } from './edit-player'
+import { EditMatch } from './edit-match'
 
 const notImplemented = (name: string) => {
   const options = {
@@ -25,23 +25,23 @@ export interface IAppProps {
   readonly manager: Manager
 }
 
-interface IAppState {
-  readonly openDialogs: PopupType[]
-  readonly match?: Match
-}
+interface IAppState {}
 
 export class App extends React.Component<IAppProps, IAppState> {
   public constructor(props: IAppProps) {
     super(props)
 
-    this.state = this.props.manager.getAppState()
-    this.props.manager.registerApp(this)
+    //this.state = this.props.manager.getAppState()
 
     //this.onPopupDismissed = this.onPopupDismissed.bind(this);
 
     Electron.ipcRenderer.on('menu-event', (event: Electron.IpcMessageEvent, { name }: { name: MenuEvent }) => {
       this.onMenuEvent(name)
     })
+  }
+
+  public componentDidMount() {
+    this.props.manager.registerApp(this)
   }
 
   /**
@@ -58,6 +58,9 @@ export class App extends React.Component<IAppProps, IAppState> {
 
       case 'add-player':
         return this.props.manager.showPopup(PopupType.AddPlayer)
+
+      case 'edit-match':
+        return this.props.manager.showPopup(PopupType.EditMatch)
 
       default:
         return notImplemented(event)
@@ -84,6 +87,9 @@ export class App extends React.Component<IAppProps, IAppState> {
 
       case PopupType.EditPlayer:
         return this.renderEditPlayerDialog()
+
+      case PopupType.EditMatch:
+        return this.renderEditMatchDialog()
 
       default:
         assert.ok(false, `Unknown dialog: ${name}`)
@@ -127,6 +133,20 @@ export class App extends React.Component<IAppProps, IAppState> {
     )
   }
 
+  private renderEditMatchDialog() {
+    let match = this.props.manager.getMatch()
+    return (
+      <EditMatch
+        key="editmatch"
+        onDismissed={() => {
+          this.onPopupDismissed(PopupType.EditMatch)
+        }}
+        manager={this.props.manager}
+        match={match}
+      />
+    )
+  }
+
   private renderAddPlayerDialog() {
     return (
       <AddPlayer
@@ -153,8 +173,9 @@ export class App extends React.Component<IAppProps, IAppState> {
   }
 
   private renderDialogs() {
+    const openDialogs = this.props.manager.getOpenDialogs()
     let ret: any[] = []
-    for (let dialog of this.state.openDialogs) {
+    for (let dialog of openDialogs) {
       ret.push(this.renderADialog(dialog))
     }
     return ret
@@ -163,7 +184,7 @@ export class App extends React.Component<IAppProps, IAppState> {
   public render() {
     return (
       <div id="xiaogangpao">
-        <MatchView manager={this.props.manager} match={this.state.match} />
+        <MatchView manager={this.props.manager} match={this.props.manager.getMatch()} />
         {this.renderDialogs()}
       </div>
     )

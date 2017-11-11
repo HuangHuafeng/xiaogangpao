@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Manager } from '../manager'
 import { Match } from '../../models/match'
 import { Player } from '../../models/player'
-import { Button } from '../../desktop'
+import { LinkButton } from '../../desktop'
 
 interface IPlayerTableBodyProps {
   readonly manager: Manager
@@ -21,8 +21,9 @@ export class PlayerTableBody extends React.Component<IPlayerTableBodyProps, IPla
   }
 
   private renderPlayerTableBody() {
+    const players = this.props.match.getPlayers()
     let ret: any[] = []
-    for (let player of this.props.match.players) {
+    for (let player of players) {
       ret.push(this.renderAPlayer(player))
     }
     return ret
@@ -38,17 +39,17 @@ export class PlayerTableBody extends React.Component<IPlayerTableBodyProps, IPla
 
   private renderAPlayer(player: Player) {
     return (
-      <tr key={player.number}>
-        <th>{player.number}</th>
-        <th>{player.name}</th>
-        <th>{player.organization}</th>
+      <tr key={player.getNumber()}>
+        <th>{player.getNumber()}</th>
+        <th>{player.getName()}</th>
+        <th>{player.getOrganization()}</th>
         <th>
-          <Button className="addplayer" onClick={() => this.editPlayer(player.number)}>
+          <LinkButton className="editplayer" onClick={() => this.editPlayer(player.getNumber())}>
             编辑
-          </Button>
-          <Button className="addplayer" onClick={() => this.removePlayer(player.number)}>
+          </LinkButton>
+          <LinkButton className="deleteplayer" onClick={() => this.removePlayer(player.getNumber())}>
             删除
-          </Button>
+          </LinkButton>
         </th>
       </tr>
     )
