@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Manager } from '../manager'
 import { Match, MatchStatus } from '../../models/match'
-import { TabBar } from '../../desktop'
+import { Button, TabBar } from '../../desktop'
 import { RoundView } from './round-view'
 import { NextRound } from './next-round'
 
@@ -43,7 +43,7 @@ export class MatchRounds extends React.Component<IMatchRoundsProps, IMatchRounds
 
   private renderActiveTabContents() {
     if (this.state.selectedIndex < this.props.match.getCurrentRound()) {
-      return <RoundView manager={this.props.manager} match={this.props.match} round={this.state.selectedIndex} />
+      return <RoundView manager={this.props.manager} match={this.props.match} round={this.state.selectedIndex + 1} />
     }
 
     return <NextRound manager={this.props.manager} match={this.props.match} />
@@ -63,6 +63,22 @@ export class MatchRounds extends React.Component<IMatchRoundsProps, IMatchRounds
   }
 
   private renderNotStarted() {
-    return <p>比赛还没有开始</p>
+    const numberOfPlayers = this.props.match.getPlayers().length
+    const totalRounds = this.props.match.getTotalRounds()
+
+    return (
+      <div>
+        <p>
+          一共有{numberOfPlayers}位选手，计划进行{totalRounds}轮比赛
+        </p>
+        <Button type="submit" disabled={this.props.match.getTotalRounds() <= 0} onClick={this.startFirstRoundPairring}>
+          安排第一轮对阵表
+        </Button>
+      </div>
+    )
+  }
+
+  private startFirstRoundPairring = () => {
+    this.props.manager.startFirstRoundPairring()
   }
 }

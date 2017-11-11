@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { Manager } from '../manager'
 import { Match } from '../../models/match'
+import { PairringTableHeader } from './pairring-table-header'
+import { PairringTableBody } from './pairring-table-body'
 
 interface IRoundViewProps {
   readonly manager: Manager
@@ -19,6 +21,10 @@ export class RoundView extends React.Component<IRoundViewProps, IRoundViewState>
     return (
       <div className="round" key={'round' + this.props.round.toString()}>
         第{this.props.round}轮的数据
+        <table>
+          <PairringTableHeader manager={this.props.manager} />
+          <PairringTableBody manager={this.props.manager} match={this.props.match} />
+        </table>
       </div>
     )
   }

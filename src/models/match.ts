@@ -1,5 +1,6 @@
 import { Player } from './player'
 import * as clone from 'clone'
+import * as assert from 'assert'
 
 export enum MatchStatus {
   NotStarted,
@@ -8,12 +9,18 @@ export enum MatchStatus {
   Finished,
 }
 
+export class GameData {
+  table: number
+  redPlayer: Player
+  blackPlayer: Player | undefined
+  result: string | undefined // '+' for red wins, '-' for black wins, '=' for draw, '?' or undefined for not known
+}
+
 export class Match {
   private name: string
   private organizer: string
   private players: Player[]
   private totalRounds: number
-
   /**
    * 0: match has not started
    * =totalRounds: match is in last round
@@ -21,6 +28,8 @@ export class Match {
    */
   private currentRound: number
   private status: MatchStatus
+  private roundData: GameData[][]
+  private statisticData: any
 
   constructor(name: string, organizer: string = '') {
     this.name = name
@@ -184,5 +193,59 @@ export class Match {
     }
 
     return clone(this.players[index])
+  }
+
+  public startFirstRoundPairring() {
+    assert.ok(
+      this.status === MatchStatus.NotStarted &&
+        this.currentRound === 0 &&
+        this.totalRounds > this.currentRound &&
+        this.roundData === undefined,
+      'IMPOSSIBLE! match is already started!'
+    )
+
+    this.status = MatchStatus.OnGoingPairring
+    this.currentRound = 1
+    this.roundData = []
+
+    this.pairCurrentRound()
+  }
+
+  public pairCurrentRound() {
+    assert.ok(
+      this.status === MatchStatus.OnGoingPairring &&
+        this.currentRound > 0 &&
+        this.currentRound <= this.totalRounds &&
+        this.roundData.length === this.currentRound - 1,
+      'IMPOSSIBLE! something wrong when pairing!'
+    )
+    const numberOfPlayers = this.players.length
+    const interval = numberOfPlayers / 2
+    let currentRoundData: GameData[] = []
+    for (let index = 0; index < numberOfPlayers / 2; index++) {
+      currentRoundData.push({
+        table: index + 1,
+        redPlayer: this.players[index],
+        blackPlayer: this.players[index + interval],
+        result: undefined,
+      })
+    }
+    if (numberOfPlayers % 2) {
+      currentRoundData.push({
+        table: (numberOfPlayers + 1) / 2,
+        redPlayer: this.players[numberOfPlayers - 1],
+        blackPlayer: undefined,
+        result: undefined,
+      })
+    }
+    this.roundData.push(currentRoundData)
+  }
+
+  public getRoundData(round: number): GameData[] {
+    if (round > this.currentRound) {
+      throw new Error('UNEXPECTED! try to get data of a round that has not played')
+    }
+
+    return clone(this.roundData[round - 1])
   }
 }

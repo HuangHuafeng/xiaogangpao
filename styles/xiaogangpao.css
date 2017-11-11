@@ -14,7 +14,7 @@ button {
   margin-bottom: 0.25em;
 }
 
-div#players table {
+table {
   border-collapse: collapse;
   border-spacing: 0px;
   margin-left: auto;
@@ -23,26 +23,26 @@ div#players table {
   border: 1px solid black;
 }
 
-div#players tbody {
+tbody {
   display: block;
   height: 400px;
   overflow: scroll;
 }
 
-div#players table thead tr {
+table thead tr {
   display: table;
   table-layout: fixed;
   color: blue;
   background: lightblue;
   width: 97.6%;
 }
-div#players table tbody tr {
+table tbody tr {
   display: table;
   width: 100%;
   table-layout: fixed;
 }
 
-div#players tr:hover {
+tr:hover {
   background-color: #75e2e6;
 }
 

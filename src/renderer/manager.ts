@@ -212,4 +212,9 @@ export class Manager {
     this.match.removeAllPlayers()
     this.updateAppState()
   }
+
+  public startFirstRoundPairring() {
+    this.match.startFirstRoundPairring()
+    this.updateAppState()
+  }
 }
