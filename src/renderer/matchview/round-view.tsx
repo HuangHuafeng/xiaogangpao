@@ -19,7 +19,7 @@ export class RoundView extends React.Component<IRoundViewProps, IRoundViewState>
 
   public render() {
     return (
-      <div className="round" key={'round' + this.props.round.toString()}>
+      <div key={'round' + this.props.round}>
         第{this.props.round}轮的数据
         <table>
           <PairringTableHeader manager={this.props.manager} />

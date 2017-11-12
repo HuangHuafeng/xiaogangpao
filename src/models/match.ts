@@ -219,22 +219,16 @@ export class Match {
         this.roundData.length === this.currentRound - 1,
       'IMPOSSIBLE! something wrong when pairing!'
     )
-    const numberOfPlayers = this.players.length
-    const interval = numberOfPlayers / 2
-    let currentRoundData: GameData[] = []
-    for (let index = 0; index < numberOfPlayers / 2; index++) {
-      currentRoundData.push({
-        table: index + 1,
-        redPlayer: this.players[index],
-        blackPlayer: this.players[index + interval],
-        result: undefined,
-      })
-    }
+    let numberOfPlayers = this.players.length
     if (numberOfPlayers % 2) {
+      numberOfPlayers += 1
+    }
+    let currentRoundData: GameData[] = []
+    for (let index = 0; index < numberOfPlayers; index += 2) {
       currentRoundData.push({
-        table: (numberOfPlayers + 1) / 2,
-        redPlayer: this.players[numberOfPlayers - 1],
-        blackPlayer: undefined,
+        table: (index + 2) / 2,
+        redPlayer: this.players[index],
+        blackPlayer: this.players[index + 1],
         result: undefined,
       })
     }

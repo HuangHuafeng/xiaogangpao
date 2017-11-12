@@ -16,12 +16,15 @@ export class PairringTableHeader extends React.Component<IPairringTableHeaderPro
     return (
       <thead>
         <tr>
+          <th>台号</th>
           <th>编号</th>
-          <th>单位</th>
-          <th>姓名</th>
+          <th>红方单位</th>
+          <th>积分</th>
+          <th>红方姓名</th>
           <th>结果</th>
-          <th>姓名</th>
-          <th>单位</th>
+          <th>黑方姓名</th>
+          <th>积分</th>
+          <th>黑方单位</th>
           <th>编号</th>
         </tr>
       </thead>

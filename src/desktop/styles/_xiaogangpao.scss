@@ -1,3 +1,8 @@
+html,
+body {
+  overflow: auto;
+}
+
 div#match {
   text-align: center;
 }
@@ -6,7 +11,7 @@ div#match h1 {
   color: royalblue;
 }
 
-div#match-setting a,
+a,
 button {
   margin-left: 0.5em;
   margin-right: 0.5em;
@@ -14,6 +19,30 @@ button {
   margin-bottom: 0.25em;
 }
 
+table {
+  border-collapse: collapse;
+  border-spacing: 0px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid black;
+}
+
+table thead tr {
+  color: blue;
+  background: lightblue;
+}
+
+tr:hover {
+  background-color: #75e2e6;
+}
+
+th {
+  border-left: 1px solid;
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+}
+
+/*
 table {
   border-collapse: collapse;
   border-spacing: 0px;
@@ -46,12 +75,8 @@ tr:hover {
   background-color: #75e2e6;
 }
 
-th {
-  border-left: 1px solid;
-  border-right: 1px solid;
-  border-bottom: 1px solid;
-}
 
 tbody a.link-button-component {
   margin: 0px 2px 0px 2px;
 }
+*/
